@@ -126,6 +126,7 @@ func (ap *awsappsignalsprocessor) processTraces(_ context.Context, td ptrace.Tra
 }
 
 func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric.Metrics) (pmetric.Metrics, error) {
+	ap.logger.Info("DEBUG: ", zap.Any("METRICS", md))
 	rms := md.ResourceMetrics()
 	for i := 0; i < rms.Len(); i++ {
 		rs := rms.At(i)
