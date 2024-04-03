@@ -214,7 +214,6 @@ jobs:
 
         # nick-fields/retry@v2 starts at base dir
       - name: Terraform apply
-        if: steps.ec2-mac-integration-test.outputs.cache-hit != 'true'
         uses: nick-fields/retry@v2
         with:
           max_attempts: 1
