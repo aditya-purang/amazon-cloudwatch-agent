@@ -5,6 +5,8 @@ package awsappsignals
 
 import (
 	"context"
+	"encoding/json"
+	"log"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pcommon"
@@ -126,17 +128,32 @@ func (ap *awsappsignalsprocessor) processTraces(_ context.Context, td ptrace.Tra
 }
 
 func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric.Metrics) (pmetric.Metrics, error) {
+	ap.logger.Info("DEBUG: ", zap.Any("METRICS", md))
 	rms := md.ResourceMetrics()
+	ap.logger.Info("DEBUG: ", zap.Any("RMS", rms))
+
 	for i := 0; i < rms.Len(); i++ {
 		rs := rms.At(i)
 		ilms := rs.ScopeMetrics()
+		ap.logger.Info("DEBUG: ", zap.Any("ilms", ilms))
+
 		resourceAttributes := rs.Resource().Attributes()
+		ap.logger.Info("DEBUG: ", zap.Any("resource attributes", resourceAttributes))
+
 		for j := 0; j < ilms.Len(); j++ {
 			ils := ilms.At(j)
 			metrics := ils.Metrics()
 			for k := 0; k < metrics.Len(); k++ {
 				m := metrics.At(k)
 				m.SetName(metricCaser.String(m.Name())) // Ensure metric name is in sentence case
+				metricJSON, err := json.Marshal(m)
+				if err != nil {
+					log.Printf("Error serializing metric to JSON: %v", err)
+					continue
+				}
+
+				// Log the JSON representation of the metric
+				ap.logger.Info("Debug: ", zap.Any("JSON Metric: ", string(metricJSON)))
 				ap.processMetricAttributes(ctx, m, resourceAttributes)
 			}
 		}
