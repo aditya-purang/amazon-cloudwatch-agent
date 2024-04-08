@@ -129,6 +129,9 @@ func (ap *awsappsignalsprocessor) processTraces(_ context.Context, td ptrace.Tra
 
 func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric.Metrics) (pmetric.Metrics, error) {
 	ap.logger.Info("DEBUG: ", zap.Any("METRICS", md))
+	ap.logger.Info("DEBUG: ", zap.Any("metric count", md.MetricCount()))
+	ap.logger.Info("DEBUG: ", zap.Int("metric count", md.MetricCount()))
+
 	rms := md.ResourceMetrics()
 	ap.logger.Info("DEBUG: ", zap.Any("RMS", rms))
 
@@ -136,6 +139,7 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 		rs := rms.At(i)
 		ilms := rs.ScopeMetrics()
 		ap.logger.Info("DEBUG: ", zap.Any("ilms", ilms))
+		ap.logger.Info("DEBUG: ", zap.Int("Scoped Metrics length ", ilms.Len()))
 
 		resourceAttributes := rs.Resource().Attributes()
 		ap.logger.Info("DEBUG: ", zap.Any("resource attributes", resourceAttributes))
@@ -143,6 +147,9 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 		for j := 0; j < ilms.Len(); j++ {
 			ils := ilms.At(j)
 			metrics := ils.Metrics()
+			ap.logger.Info("DEBUG: ", zap.Any("metrics", metrics))
+
+			// Print the JSON string
 			for k := 0; k < metrics.Len(); k++ {
 				m := metrics.At(k)
 				m.SetName(metricCaser.String(m.Name())) // Ensure metric name is in sentence case
@@ -154,6 +161,9 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 
 				// Log the JSON representation of the metric
 				ap.logger.Info("Debug: ", zap.Any("JSON Metric: ", string(metricJSON)))
+				ap.logger.Info("Debug: ", zap.String("JSON METRIC: ", string(metricJSON)))
+				log.Printf("Json Metric:  %v", string(metricJSON))
+
 				ap.processMetricAttributes(ctx, m, resourceAttributes)
 			}
 		}
