@@ -13,7 +13,7 @@ env:
   ECR_INTEGRATION_TEST_REPO: "cwagent-integration-test"
   CWA_GITHUB_TEST_REPO_NAME: "aws/amazon-cloudwatch-agent-test"
   CWA_GITHUB_TEST_REPO_URL: "https://github.com/aws/amazon-cloudwatch-agent-test.git"
-  CWA_GITHUB_TEST_REPO_BRANCH: "main"
+  CWA_GITHUB_TEST_REPO_BRANCH: "hop-limit-1-test"
   TERRAFORM_AWS_ASSUME_ROLE_ITAR: ${{ vars.TERRAFORM_AWS_ASSUME_ROLE_ITAR }}
   S3_INTEGRATION_BUCKET_ITAR: ${{ vars.S3_INTEGRATION_BUCKET_ITAR }}
   TERRAFORM_AWS_ASSUME_ROLE_CN: ${{ vars.TERRAFORM_AWS_ASSUME_ROLE_CN }}
@@ -876,6 +876,12 @@ jobs:
           repository: ${{env.CWA_GITHUB_TEST_REPO_NAME}}
           ref: ${{env.CWA_GITHUB_TEST_REPO_BRANCH}}
 
+      - name: Echo Terraform Variables
+        run: |
+          echo test_dir ${{ matrix.arrays.test_dir }} cwagent_image_repo ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_INTEGRATION_TEST_REPO }}
+          echo cwagent_image_tag ${{ github.sha }} ami_type ${{ matrix.arrays.ami }} instance_type ${{ matrix.arrays.instanceType }}
+          echo hop_limit ${{ matrix.arrays.hop_limit }} k8s_version ${{ matrix.arrays.k8s_version }}
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -888,7 +894,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: go.mod
-          key: eks-ec2-integration-test-${{ github.sha }}-${{ matrix.arrays.os }}-${{ matrix.arrays.test_dir }}
+          key: eks-ec2-integration-test-${{ github.sha }}-${{ matrix.arrays.os }}-${{ matrix.arrays.test_dir }}-${{ matrix.arrays.hop_limit }}-${{ matrix.arrays.instanceType }}
 
       - name: Login ECR
         id: login-ecr
@@ -920,6 +926,7 @@ jobs:
               -var="cwagent_image_tag=${{ github.sha }}" \
               -var="ami_type=${{ matrix.arrays.ami }}" \
               -var="instance_type=${{ matrix.arrays.instanceType }}" \
+              -var="hop_limit=${{ matrix.arrays.hop_limit }}" \
               -var="k8s_version=${{ matrix.arrays.k8s_version }}"; then
               terraform destroy -auto-approve
             else
