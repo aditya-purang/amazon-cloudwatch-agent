@@ -272,9 +272,10 @@ func (ap *awsappsignalsprocessor) processMetricAttributes(_ context.Context, m p
 			}
 		}
 	case pmetric.MetricTypeHistogram:
-		ap.logger.Info("15 DEBUG: Histogram", zap.Any("dps len", dps.Len()))
 
 		dps := m.Histogram().DataPoints()
+		ap.logger.Info("15 DEBUG: Histogram", zap.Any("dps len", dps.Len()))
+
 		for i := 0; i < dps.Len(); i++ {
 			for _, mutator := range ap.metricMutators {
 				err := mutator.Process(dps.At(i).Attributes(), resourceAttribes, false)
@@ -309,9 +310,10 @@ func (ap *awsappsignalsprocessor) processMetricAttributes(_ context.Context, m p
 			}
 		}
 	case pmetric.MetricTypeExponentialHistogram:
-		ap.logger.Info("15 DEBUG: expHist", zap.Any("dps len", dps.Len()))
 
 		dps := m.ExponentialHistogram().DataPoints()
+		ap.logger.Info("15 DEBUG: expHist", zap.Any("dps len", dps.Len()))
+
 		for i := 0; i < dps.Len(); i++ {
 			for _, mutator := range ap.metricMutators {
 				err := mutator.Process(dps.At(i).Attributes(), resourceAttribes, false)
