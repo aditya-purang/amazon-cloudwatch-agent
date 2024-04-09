@@ -155,12 +155,9 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 		ap.logger.Info("8 DEBUG: ", zap.Any(" ilms ", ilms))
 		ap.logger.Info("8-1 DEBUG: ", zap.Any("Scoped Metrics Metrics ", ilms.At(0).Metrics()))
 		ap.logger.Info("8-2 DEBUG: ", zap.Any("Scoped Metrics schema ", ilms.At(0).SchemaUrl()))
-		ap.logger.Info("8-2 DEBUG: ", zap.Any("Scoped Metrics schema ", ilms.At(0).SchemaUrl()))
-		ap.logger.Info("8-1 DEBUG: ", zap.Any("Scoped Metrics Name of metric 1: ", ilms.At(0).Metrics().At(0).Name()))
-		ap.logger.Info("8-1 DEBUG: ", zap.Any("Scoped Metrics Description of metric 1: ", ilms.At(0).Metrics().At(0).Description()))
-
-		ap.logger.Info("8-1-x DEBUG: ", zap.Any("Scoped Metrics Name : ", ilms.At(0).Metrics().At(0).Name()))
-		ap.logger.Info("8-2-x DEBUG: ", zap.Any("Scoped Metric x datapoints x attributes as raw: ", ilms.At(0).Metrics().At(0).Sum().DataPoints().At(0).Attributes().AsRaw()))
+		ap.logger.Info("8-3 DEBUG: ", zap.Any("Scoped Metrics Name of metric 1: ", ilms.At(0).Metrics().At(0).Name()))
+		ap.logger.Info("8-4 DEBUG: ", zap.Any("Scoped Metrics Description of metric 1: ", ilms.At(0).Metrics().At(0).Description()))
+		ap.logger.Info("8-5 DEBUG: ", zap.Any("Scoped Metric x datapoints x attributes as raw: ", ilms.At(0).Metrics().At(0).Description()))
 
 		resourceAttributes := rs.Resource().Attributes()
 		ap.logger.Info("9 DEBUG: ", zap.Any("resource attributes", resourceAttributes))
