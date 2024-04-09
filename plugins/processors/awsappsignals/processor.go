@@ -159,11 +159,8 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 		ap.logger.Info("8-1 DEBUG: ", zap.Any("Scoped Metrics Name of metric 1: ", ilms.At(0).Metrics().At(0).Name()))
 		ap.logger.Info("8-1 DEBUG: ", zap.Any("Scoped Metrics Description of metric 1: ", ilms.At(0).Metrics().At(0).Description()))
 
-		for x := 0; x < ilms.At(0).Metrics().At(0).Sum().DataPoints().Len(); x++ {
-			ap.logger.Info("8-1-x DEBUG: ", zap.Any("Scoped Metrics Name : ", ilms.At(0).Metrics().At(0).Name()))
-			ap.logger.Info("8-2-x DEBUG: ", zap.Any("Scoped Metric x datapoints x attributes as raw: ", ilms.At(0).Metrics().At(0).Sum().DataPoints().At(x).Attributes().AsRaw()))
-
-		}
+		ap.logger.Info("8-1-x DEBUG: ", zap.Any("Scoped Metrics Name : ", ilms.At(0).Metrics().At(0).Name()))
+		ap.logger.Info("8-2-x DEBUG: ", zap.Any("Scoped Metric x datapoints x attributes as raw: ", ilms.At(0).Metrics().At(0).Sum().DataPoints().At(0).Attributes().AsRaw()))
 
 		resourceAttributes := rs.Resource().Attributes()
 		ap.logger.Info("9 DEBUG: ", zap.Any("resource attributes", resourceAttributes))
