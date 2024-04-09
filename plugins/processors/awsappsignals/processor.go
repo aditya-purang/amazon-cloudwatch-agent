@@ -168,14 +168,14 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 		ap.logger.Info("8-3-1-0 DEBUG: ", zap.Any("Metric Name: ", ilms.At(0).Metrics().At(0).Name()))
 		ap.logger.Info("8-3-2-0 DEBUG: ", zap.Any("Metric Unit ", ilms.At(0).Metrics().At(0).Unit()))
 		ap.logger.Info("8-3-3-0 DEBUG: ", zap.Any("Metric Type ", ilms.At(0).Metrics().At(0).Type()))
-		ap.logger.Info("8-3-4-2 DEBUG: ", zap.Any("Metric's Exponential Hist Attributes: ", ilms.At(0).Metrics().At(0).ExponentialHistogram().DataPoints().At(0).Attributes().AsRaw()))
+		ap.logger.Info("8-3-4-0 DEBUG: ", zap.Any("Metric's Exponential Hist Attributes: ", ilms.At(0).Metrics().At(0).ExponentialHistogram().DataPoints().At(0).Attributes().AsRaw()))
 		ap.logger.Info("8-3-5-0 DEBUG: ", zap.Any("Metric's Exponential Hist: ", ilms.At(0).Metrics().At(0).ExponentialHistogram().DataPoints().Len()))
 
 		ap.logger.Info("8-3-1-1 DEBUG: ", zap.Any("Metric Name: ", ilms.At(0).Metrics().At(1).Name()))
 		ap.logger.Info("8-3-2-1 DEBUG: ", zap.Any("Metric Unit ", ilms.At(0).Metrics().At(1).Unit()))
 		ap.logger.Info("8-3-3-1 DEBUG: ", zap.Any("Metric Type ", ilms.At(0).Metrics().At(1).Type()))
 		ap.logger.Info("8-3-4-1 DEBUG: ", zap.Any("Metric's Exponential Hist: ", ilms.At(0).Metrics().At(1).ExponentialHistogram()))
-		ap.logger.Info("8-3-4-2 DEBUG: ", zap.Any("Metric's Exponential Hist Attributes: ", ilms.At(0).Metrics().At(1).ExponentialHistogram().DataPoints().At(0).Attributes().AsRaw()))
+		ap.logger.Info("8-3-4-1 DEBUG: ", zap.Any("Metric's Exponential Hist Attributes: ", ilms.At(0).Metrics().At(1).ExponentialHistogram().DataPoints().At(0).Attributes().AsRaw()))
 		ap.logger.Info("8-3-4-1 DEBUG: ", zap.Any("Metric's Exponential Hist: ", ilms.At(0).Metrics().At(1).ExponentialHistogram().DataPoints().Len()))
 
 		ap.logger.Info("8-3-1-2 DEBUG: ", zap.Any("Metric Name: ", ilms.At(0).Metrics().At(2).Name()))
