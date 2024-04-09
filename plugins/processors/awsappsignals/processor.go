@@ -128,9 +128,9 @@ func (ap *awsappsignalsprocessor) processTraces(_ context.Context, td ptrace.Tra
 }
 
 func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric.Metrics) (pmetric.Metrics, error) {
-	ap.logger.Info("DEBUG: ", zap.Any("METRICS", md))
-	ap.logger.Info("DEBUG: ", zap.Any("metric count", md.MetricCount()))
-	ap.logger.Info("DEBUG: ", zap.Int("metric count", md.MetricCount()))
+	ap.logger.Info("1 DEBUG: ", zap.Any("METRICS", md))
+	ap.logger.Info("2 DEBUG: ", zap.Any("metric count", md.MetricCount()))
+	ap.logger.Info("3 DEBUG: ", zap.Int("metric count", md.MetricCount()))
 
 	rms := md.ResourceMetrics()
 	labels := map[string]string{}
@@ -144,22 +144,25 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 			})
 		}
 	}
-	ap.logger.Info("DEBUG: ", zap.Any("RMS", rms))
-	ap.logger.Info("AyOOOOO: ", zap.Any("RMS", rms))
+	ap.logger.Info("4 DEBUG: ", zap.Any("RMS", rms))
+	ap.logger.Info("5 AyOOOOO: ", zap.Any("RMS", rms))
 
 	for i := 0; i < rms.Len(); i++ {
 		rs := rms.At(i)
 		ilms := rs.ScopeMetrics()
-		ap.logger.Info("DEBUG: ", zap.Any("ilms", ilms))
-		ap.logger.Info("DEBUG: ", zap.Int("Scoped Metrics length ", ilms.Len()))
+		ap.logger.Info("6 DEBUG: ", zap.Any("ilms", ilms))
+		ap.logger.Info("7 DEBUG: ", zap.Int("Scoped Metrics length ", ilms.Len()))
+		ap.logger.Info("8 DEBUG: ", zap.Any("Scoped Metrics length ", ilms))
 
 		resourceAttributes := rs.Resource().Attributes()
-		ap.logger.Info("DEBUG: ", zap.Any("resource attributes", resourceAttributes))
+		ap.logger.Info("9 DEBUG: ", zap.Any("resource attributes", resourceAttributes))
 
 		for j := 0; j < ilms.Len(); j++ {
 			ils := ilms.At(j)
 			metrics := ils.Metrics()
-			ap.logger.Info("DEBUG: ", zap.Any("metrics", metrics))
+			ap.logger.Info("10 DEBUG: ", zap.Any("metrics", metrics))
+
+			ap.logger.Info("10-2 DEBUG: ", zap.Any("metrics", metrics))
 
 			// Print the JSON string
 			for k := 0; k < metrics.Len(); k++ {
@@ -167,14 +170,14 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 				m.SetName(metricCaser.String(m.Name())) // Ensure metric name is in sentence case
 				metricJSON, err := json.Marshal(m)
 				if err != nil {
-					log.Printf("Error serializing metric to JSON: %v", err)
+					log.Printf("11 Error serializing metric to JSON: %v", err)
 					continue
 				}
 
 				// Log the JSON representation of the metric
-				ap.logger.Info("Debug: ", zap.Any("JSON Metric: ", string(metricJSON)))
-				ap.logger.Info("Debug: ", zap.String("JSON METRIC: ", string(metricJSON)))
-				log.Printf("Json Metric:  %v", string(metricJSON))
+				ap.logger.Info("12 Debug: ", zap.Any("JSON Metric: ", string(metricJSON)))
+				ap.logger.Info("13 Debug: ", zap.String("JSON METRIC: ", string(metricJSON)))
+				log.Printf("14 Json Metric:  %v", string(metricJSON))
 
 				ap.processMetricAttributes(ctx, m, resourceAttributes)
 			}
