@@ -133,7 +133,19 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 	ap.logger.Info("DEBUG: ", zap.Int("metric count", md.MetricCount()))
 
 	rms := md.ResourceMetrics()
+	labels := map[string]string{}
+	for i := 0; i < rms.Len(); i++ {
+		rm := rms.At(i)
+		am := rm.Resource().Attributes()
+		if am.Len() > 0 {
+			am.Range(func(k string, v pcommon.Value) bool {
+				labels[k] = v.Str()
+				return true
+			})
+		}
+	}
 	ap.logger.Info("DEBUG: ", zap.Any("RMS", rms))
+	ap.logger.Info("AyOOOOO: ", zap.Any("RMS", rms))
 
 	for i := 0; i < rms.Len(); i++ {
 		rs := rms.At(i)
