@@ -152,7 +152,18 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 		ilms := rs.ScopeMetrics()
 		ap.logger.Info("6 DEBUG: ", zap.Any("ilms", ilms))
 		ap.logger.Info("7 DEBUG: ", zap.Int("Scoped Metrics length ", ilms.Len()))
-		ap.logger.Info("8 DEBUG: ", zap.Any("Scoped Metrics length ", ilms))
+		ap.logger.Info("8 DEBUG: ", zap.Any(" ilms ", ilms))
+		ap.logger.Info("8-1 DEBUG: ", zap.Any("Scoped Metrics Metrics ", ilms.At(0).Metrics()))
+		ap.logger.Info("8-2 DEBUG: ", zap.Any("Scoped Metrics schema ", ilms.At(0).SchemaUrl()))
+		ap.logger.Info("8-2 DEBUG: ", zap.Any("Scoped Metrics schema ", ilms.At(0).SchemaUrl()))
+		ap.logger.Info("8-1 DEBUG: ", zap.Any("Scoped Metrics Name of metric 1: ", ilms.At(0).Metrics().At(0).Name()))
+		ap.logger.Info("8-1 DEBUG: ", zap.Any("Scoped Metrics Description of metric 1: ", ilms.At(0).Metrics().At(0).Description()))
+
+		for x := 0; x < ilms.At(0).Metrics().At(0).Sum().DataPoints().Len(); x++ {
+			ap.logger.Info("8-1-x DEBUG: ", zap.Any("Scoped Metrics Name : ", ilms.At(0).Metrics().At(0).Name()))
+			ap.logger.Info("8-2-x DEBUG: ", zap.Any("Scoped Metric x datapoints x attributes as raw: ", ilms.At(0).Metrics().At(0).Sum().DataPoints().At(x).Attributes().AsRaw()))
+
+		}
 
 		resourceAttributes := rs.Resource().Attributes()
 		ap.logger.Info("9 DEBUG: ", zap.Any("resource attributes", resourceAttributes))
@@ -175,8 +186,8 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 				}
 
 				// Log the JSON representation of the metric
-				ap.logger.Info("12 Debug: ", zap.Any("JSON Metric: ", string(metricJSON)))
-				ap.logger.Info("13 Debug: ", zap.String("JSON METRIC: ", string(metricJSON)))
+				ap.logger.Info("12 Debug: ", zap.Any("12 JSON Metric: ", string(metricJSON)))
+				ap.logger.Info("13 Debug: ", zap.String("13 JSON METRIC: ", string(metricJSON)))
 				log.Printf("14 Json Metric:  %v", string(metricJSON))
 
 				ap.processMetricAttributes(ctx, m, resourceAttributes)
