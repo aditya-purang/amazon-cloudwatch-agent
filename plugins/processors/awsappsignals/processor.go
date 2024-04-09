@@ -128,6 +128,16 @@ func (ap *awsappsignalsprocessor) processTraces(_ context.Context, td ptrace.Tra
 }
 
 func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric.Metrics) (pmetric.Metrics, error) {
+	jsonBytes, err := json.Marshal(md)
+	if err != nil {
+		log.Fatalf("Error marshalling to JSON: %v", err)
+	}
+
+	jsonString := string(jsonBytes)
+	log.Printf("0 Json Metric:  %v", jsonString)
+	ap.logger.Info("0-1 DEBUG: ", zap.Any("METRICS", jsonString))
+	ap.logger.Info("0-2 DEBUG: ", zap.String("METRICS", jsonString))
+
 	ap.logger.Info("1 DEBUG: ", zap.Any("METRICS", md))
 	ap.logger.Info("2 DEBUG: ", zap.Any("metric count", md.MetricCount()))
 	ap.logger.Info("3 DEBUG: ", zap.Int("metric count", md.MetricCount()))
@@ -386,6 +396,7 @@ func (ap *awsappsignalsprocessor) processMetricAttributes(_ context.Context, m p
 			}
 		}
 	default:
+		ap.logger.Info("15 DEBUG: gauge", zap.Any("dps len", "s"))
 		ap.logger.Debug("Ignore unknown metric type", zap.String("type", m.Type().String()))
 	}
 }
