@@ -157,7 +157,8 @@ func (ap *awsappsignalsprocessor) processMetrics(ctx context.Context, md pmetric
 		ap.logger.Info("8-2 DEBUG: ", zap.Any("Scoped Metrics schema ", ilms.At(0).SchemaUrl()))
 		ap.logger.Info("8-3 DEBUG: ", zap.Any("Scoped Metrics Name of metric 1: ", ilms.At(0).Metrics().At(0).Name()))
 		ap.logger.Info("8-4 DEBUG: ", zap.Any("Scoped Metrics Description of metric 1: ", ilms.At(0).Metrics().At(0).Description()))
-		ap.logger.Info("8-5 DEBUG: ", zap.Any("Scoped Metric x datapoints x attributes as raw: ", ilms.At(0).Metrics().At(0).Description()))
+		ap.logger.Info("8-5 DEBUG: ", zap.Any("Scoped Metric x sum ", ilms.At(0).Metrics().At(0).Sum()))
+		ap.logger.Info("8-6 DEBUG: ", zap.Any("Scoped Metric x summary ", ilms.At(0).Metrics().At(0).Summary()))
 
 		resourceAttributes := rs.Resource().Attributes()
 		ap.logger.Info("9 DEBUG: ", zap.Any("resource attributes", resourceAttributes))
@@ -199,6 +200,8 @@ func (ap *awsappsignalsprocessor) processMetricAttributes(_ context.Context, m p
 	switch m.Type() {
 	case pmetric.MetricTypeGauge:
 		dps := m.Gauge().DataPoints()
+		ap.logger.Info("15 DEBUG: gauge", zap.Any("dps len", dps.Len()))
+
 		for i := 0; i < dps.Len(); i++ {
 			for _, mutator := range ap.metricMutators {
 				err := mutator.Process(dps.At(i).Attributes(), resourceAttribes, false)
@@ -234,6 +237,7 @@ func (ap *awsappsignalsprocessor) processMetricAttributes(_ context.Context, m p
 		}
 	case pmetric.MetricTypeSum:
 		dps := m.Sum().DataPoints()
+		ap.logger.Info("15 DEBUG: sum", zap.Any("dps len", dps.Len()))
 		for i := 0; i < dps.Len(); i++ {
 			for _, mutator := range ap.metricMutators {
 				err := mutator.Process(dps.At(i).Attributes(), resourceAttribes, false)
@@ -268,6 +272,8 @@ func (ap *awsappsignalsprocessor) processMetricAttributes(_ context.Context, m p
 			}
 		}
 	case pmetric.MetricTypeHistogram:
+		ap.logger.Info("15 DEBUG: Histogram", zap.Any("dps len", dps.Len()))
+
 		dps := m.Histogram().DataPoints()
 		for i := 0; i < dps.Len(); i++ {
 			for _, mutator := range ap.metricMutators {
@@ -303,6 +309,8 @@ func (ap *awsappsignalsprocessor) processMetricAttributes(_ context.Context, m p
 			}
 		}
 	case pmetric.MetricTypeExponentialHistogram:
+		ap.logger.Info("15 DEBUG: expHist", zap.Any("dps len", dps.Len()))
+
 		dps := m.ExponentialHistogram().DataPoints()
 		for i := 0; i < dps.Len(); i++ {
 			for _, mutator := range ap.metricMutators {
@@ -338,7 +346,10 @@ func (ap *awsappsignalsprocessor) processMetricAttributes(_ context.Context, m p
 			}
 		}
 	case pmetric.MetricTypeSummary:
+
 		dps := m.Summary().DataPoints()
+		ap.logger.Info("15 DEBUG: summary", zap.Any("dps len", dps.Len()))
+
 		for i := 0; i < dps.Len(); i++ {
 			for _, mutator := range ap.metricMutators {
 				err := mutator.Process(dps.At(i).Attributes(), resourceAttribes, false)
